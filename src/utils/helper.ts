@@ -5,11 +5,28 @@ export enum LinkPrecedenceEnum {
   SECONDARY = "secondary",
 }
 
-export const getPrimaryContact = (
-  contactList: ContactEntity[]
-): ContactEntity => {
-  for (let index = 0; index < contactList.length; index++) {
-    const contact = contactList[index];
-    if (contact.linkPrecedence === LinkPrecedenceEnum.PRIMARY) return contact;
-  }
+export const returnHelper = (
+  primaryContact: ContactEntity,
+  secondaryContacts: ContactEntity[]
+): Object => {
+  const primaryContatctId = primaryContact.id;
+  const emails = [
+    ...new Set(
+      [primaryContact.email].concat(
+        secondaryContacts.map((contact) => contact.email)
+      )
+    ),
+  ];
+  const phoneNumbers = [
+    ...new Set(
+      [primaryContact.phoneNumber].concat(
+        secondaryContacts.map((contact) => contact.phoneNumber)
+      )
+    ),
+  ];
+  const secondaryContactIds = secondaryContacts.map((contact) => contact.id);
+
+  return {
+    contact: { primaryContatctId, emails, phoneNumbers, secondaryContactIds },
+  };
 };
