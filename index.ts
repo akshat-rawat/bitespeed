@@ -1,7 +1,22 @@
 import express, { Express, Request, Response } from "express";
+import { createConnection } from "typeorm";
 
 const app: Express = express();
 const port: number = 3000;
+
+createConnection({
+    type: "sqlite",
+    database: "src/db/database.sqlite",
+    synchronize: true,
+    logging: true,
+    entities: ["src/db/entity/**/*.ts"],
+  })
+    .then(() => {
+      console.log("Connected to the database");
+    })
+    .catch((error) => {
+      console.error("Database connection error:", error);
+    });
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server initiated - beep boop");
